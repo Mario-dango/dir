@@ -10,22 +10,18 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 
 
 class MainController(QObject):
-    
     def __init__(self, mainWindow = None):
         super().__init__()
         # self.ventanaPrincipal = mainWindow
-        self.ventanaPrincipal = VentanaPrincipal()
+        if mainWindow is None:
+            self.ventanaPrincipal = VentanaPrincipal()
+        else:
+            self.ventanaPrincipal = mainWindow
         self.qFile = FileManager()
         self.modelExcel = ExcelModel()
         self.longitudinalController = ControlLongitudinal(self.modelExcel)
         self.transversalController = ControlTransversal(self.modelExcel)
         self.ventanaArte = VentanaArte()
-        ## interactive part
-        
-        self.fig, self.ax = plt.subplots()
-        self.canvas = FigureCanvas(self.fig)
-        self.selected_point = None  # Punto seleccionado
-        self.offset = 0  # Offset del desplazamiento
 
         self.setup()
         
@@ -34,8 +30,9 @@ class MainController(QObject):
         #cargar datos de prueba
         pathDefault = "C:/Users/mprob/Documents/Proyectos/Sistema de Estimacion de Rutas/SER/app/resources/data/examples/dataTest.csv"
         dataDefault = self.modelExcel.leerData(pathDefault)
-        print(dataDefault.loc[1])
-        print(type(pathDefault))  # Verifica el tipo de pathDefault
+        # print("Los datos leído son:\n %s" % dataDefault)
+        # print(dataDefault.loc[1])
+        # print(type(pathDefault))  # Verifica el tipo de pathDefault
             
         medias = {"tm": []}
         for i in range(len(dataDefault)):
@@ -44,17 +41,15 @@ class MainController(QObject):
             medias["tm"].append(media)
 
         dataDefault['tm'] = medias["tm"]
-        dataLong = pd.DataFrame()
-        print(medias)
-            
-        
-        # # Conectar la señal mouseMoveEvent al método correspondiente
-        # self.transversalController.transversalView.chart_view.mouseMoveEvent = self.mouseMoveEvent
-        # self.transversalController.transversalView.chart_view.setMouseTracking(True)  # Habilitar el seguimiento del cursor
-        
-        # # Conectar la señal mouseMoveEvent al método correspondiente
-        # self.longitudinalController.longitudinalView.chart_view.mouseMoveEvent = self.mouseMoveEvent
-        # self.longitudinalController.longitudinalView.chart_view.setMouseTracking(True)  # Habilitar el seguimiento del cursor
+        dataLong = dataDefault.iloc[:, [0, 1, -1]].copy()
+        dataTrans = dataDefault.iloc[:, [0, 1, -1]].copy()
+        # dataTrans = dataDefault.iloc[:,0:40].copy()
+        # print(medias)
+        # print(dataLong['tm'])
+        self.longitudinalController.data = dataLong
+        self.longitudinalController.setup()
+        self.transversalController.data = dataTrans
+        self.transversalController.setup()
         
         #Mostrar la ventana
         self.ventanaPrincipal.show()
@@ -64,9 +59,14 @@ class MainController(QObject):
         self.ventanaPrincipal.btnSave.clicked.connect(self.guardar)
         self.ventanaPrincipal.btnConfig.clicked.connect(self.obraArte)
         
-        self.cid_press = self.canvas.mpl_connect('button_press_event', self.on_click)
-        self.cid_release = self.canvas.mpl_connect('button_release_event', self.on_release)
-        self.cid_move = self.canvas.mpl_connect('motion_notify_event', self.on_move)
+        
+        self.cid_press = self.longitudinalController.longitudinalView.canvas.mpl_connect('button_press_event', self.on_click_long)
+        self.cid_release = self.longitudinalController.longitudinalView.canvas.mpl_connect('button_release_event', self.on_release_long)
+        self.cid_move = self.longitudinalController.longitudinalView.canvas.mpl_connect('motion_notify_event', self.on_move_long)
+        self.cid_press = self.transversalController.transversalView.canvas.mpl_connect('button_press_event', self.on_click_trans)
+        self.cid_release = self.transversalController.transversalView.canvas.mpl_connect('button_release_event', self.on_release_trans)
+        self.cid_move = self.transversalController.transversalView.canvas.mpl_connect('motion_notify_event', self.on_move_trans)
+        
         
         self.setInfo("""
 Repositorio GitHub: https://github.com/Mario-dango/dir
@@ -79,6 +79,7 @@ Versión: v0.2.4""")
         print("Cargando el archivo")
         fileName = self.qFile.open("cargar")
         if fileName is not None:
+            print(fileName[-4:])
             if fileName[-4:] != '.csv':
                 print("favor de usar formato .CSV")
             else:
@@ -121,29 +122,49 @@ Versión: v0.2.4""")
         pass
             
         
-    def on_click(self, event):
-        print("estoy en on_click")
-        if event.inaxes == self.ax:
-            xdata = self.line.get_xdata()
-            ydata = self.line.get_ydata()
-            # Verificar la distancia con los puntos
-            for i, (x, y) in enumerate(zip(xdata, ydata)):
-                distance = ((x - event.xdata)**2 + (y - event.ydata)**2)**0.5
-                if distance < 0.1:  # Valor de tolerancia para seleccionar el punto
-                    self.selected_point = i
-                    self.lbl_previous.setText(f'Posición anterior: ({x:.2f}, {y:.2f})')
-                    break
+    def on_click_trans(self, event):
+        pass
 
-    def on_release(self, event):
-        print("estoy en on_release")
-        self.selected_point = None
+    def on_release_trans(self, event):
+        pass
 
-    def on_move(self, event):
-        print("estoy en on_move")
-        if self.selected_point is not None:
-            if event.inaxes == self.ax:
-                new_y = self.y.copy()
-                new_y[self.selected_point] = event.ydata
-                self.line.set_ydata(new_y)
-                self.lbl_new.setText(f'Nueva posición: ({self.x[self.selected_point]:.2f}, {event.ydata:.2f})')
-                self.canvas.draw()
+    def on_move_trans(self, event):
+        pass
+    
+    def on_click_long(self, event):
+        if self.longitudinalController.longitudinalView.selected_point is not None:
+            alturaRazante = self.longitudinalController.longitudinalView.hRazante[self.longitudinalController.longitudinalView.progresiva[self.longitudinalController.longitudinalView.selected_point]]
+            progresiva = self.longitudinalController.longitudinalView.progresiva[self.longitudinalController.longitudinalView.selected_point]
+            alturaTerreno = self.longitudinalController.longitudinalView.hTerreno[self.longitudinalController.longitudinalView.progresiva[self.longitudinalController.longitudinalView.selected_point]]
+            diferencia = alturaRazante - alturaTerreno
+            dataText = (
+            f"[Progresiva Número: {progresiva}\n"
+            f"[Cota Número: {progresiva}]\n"
+            f"[Altura de Ruta: {alturaRazante:.2f}m]\n"
+            f"[Altura de Terreno Natural: {alturaTerreno:.2f}m]\n"
+            f"[Diferencia: {diferencia:.2f}m] ")
+            
+
+            self.ventanaPrincipal.updateTransInfo(dataText)
+        else:
+            pass
+
+    def on_release_long(self, event):
+        pass
+
+    def on_move_long(self, event):
+        if self.longitudinalController.longitudinalView.selected_point is not None:
+            alturaRazante = self.longitudinalController.longitudinalView.hRazante[self.longitudinalController.longitudinalView.progresiva[self.longitudinalController.longitudinalView.selected_point]]
+            progresiva = self.longitudinalController.longitudinalView.progresiva[self.longitudinalController.longitudinalView.selected_point]
+            alturaTerreno = self.longitudinalController.longitudinalView.hTerreno[self.longitudinalController.longitudinalView.progresiva[self.longitudinalController.longitudinalView.selected_point]]
+            diferencia = alturaRazante - alturaTerreno
+            dataText = (
+            f"[Progresiva Número: {progresiva}\n"
+            f"[Cota Número: {progresiva}]\n"
+            f"[Altura de Ruta: {alturaRazante:.2f}m]\n"
+            f"[Altura de Terreno Natural: {alturaTerreno:.2f}m]\n"
+            f"[Diferencia: {diferencia:.2f}m] ")           
+
+            self.ventanaPrincipal.updateTransInfo(dataText)
+        else:
+            pass

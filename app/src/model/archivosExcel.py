@@ -3,7 +3,7 @@ import os, sys
 
 class ExcelModel():
     
-    def __init__ (self):
+    def __init__ (self, parent=None):
         self.pathToLoad = "../../resources/data/loadData/"
         self.pathToSave = "../../resources/data/saveData/"
         self.data = None

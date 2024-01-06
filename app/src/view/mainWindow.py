@@ -10,8 +10,8 @@ from PyQt5 import uic
 
 # from app.src.view.widgets import ChartWidget
 class VentanaPrincipal(QMainWindow):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent= None):
+        super().__init__(parent)
         #Iniciar el objeto QMainWindow
         QMainWindow.__init__(self)
         pathUi = "C:/Users/mprob/Documents/Proyectos/Sistema de Estimacion de Rutas/SER/app/resources/ui/principal.ui"
@@ -27,9 +27,14 @@ class VentanaPrincipal(QMainWindow):
         if (widgetLong != None) and (widgetTrans != None):# Obtener el layout del QFrame si es un contenedor de layout
             frame_layout = self.windowUI.frameIzq.layout()  # Reemplaza con el método correcto si el QFrame tiene un layout
 
-            frame_layout.insertWidget(1, widgetLong.chart_view) 
+            # frame_layout.insertWidget(1, widgetLong.chart_view) 
+            # self.widgetGrafLong = widgetLong
+            # frame_layout.insertWidget(5, widgetTrans.chart_view) 
+            # self.widgetGrafTrans = widgetTrans
+            
+            frame_layout.insertWidget(1, widgetLong) 
             self.widgetGrafLong = widgetLong
-            frame_layout.insertWidget(5, widgetTrans.chart_view) 
+            frame_layout.insertWidget(5, widgetTrans) 
             self.widgetGrafTrans = widgetTrans
         pass
 
@@ -40,6 +45,7 @@ class VentanaPrincipal(QMainWindow):
         pass
     
     def updateTransInfo(self, data):
+        self.windowUI.dataGrafTrans.setText(data)
         # self.window.layoutIzq.insertWidget(5, widgetTrans.chart_view) 
         # self.widgetGrafTrans = widgetTrans
         pass

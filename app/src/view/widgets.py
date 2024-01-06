@@ -4,14 +4,20 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import *
 from app.src.model.archivosExcel import ExcelModel
 
+import matplotlib.pyplot as plt
+import pandas as pd
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+
+
 
 class FileManager(QWidget):
     def __init__(self):
-      self.fileName = None
-      self.pathSave = "../../resources/data/saveData"
-      self.pathLoad = "../../resources/data/loadData"
-      self.formats = "Excel2007 (*.xlsx);; Excel97 (*.xls);; doc CSV (*.csv);; Libre Office (*.ods)"
-      self.fileDialog = QFileDialog()
+        super().__init__()
+        self.fileName = None
+        self.pathSave = "../../resources/data/saveData"
+        self.pathLoad = "../../resources/data/loadData"
+        self.formats = "Excel2007 (*.xlsx);; Excel97 (*.xls);; doc CSV (*.csv);; Libre Office (*.ods)"
+        self.fileDialog = QFileDialog()
       
     def open(self, mode=None):
         self.fileDialog.setFileMode(QFileDialog.ExistingFile)
@@ -24,7 +30,7 @@ class FileManager(QWidget):
                 # "Load" or "LOAD" or "cargar" or "Cargar"
             elif (mode == "load") or (mode == "Load") or (mode == "LOAD") or (mode == "cargar") or (mode == "Cargar"):
                 self.fileName = self.fileDialog.getOpenFileName(self, "Cargar Documento", self.pathLoad, self.formats)
-                print(f"se guardó el archivo en: {self.fileName}")
+                print(f"se seleccionó el archivo: {self.fileName}")
             else:
                 self.fileName = None
                 print("No se especifica el Método.")
@@ -39,7 +45,7 @@ class FileManager(QWidget):
         self.directory = selected_directory
         
 
-class WidgetsGraf(QWidget):
+class WidgetsGrafB(QWidget):
     def __init__(self, grafType):
         super().__init__()
         self.grafType = grafType
@@ -199,139 +205,32 @@ class WidgetsGraf(QWidget):
 
 
 
-# class WidgetsGraf(QWidget):
-#     def __init__(self, grafType):
-#         super().__init__()
-#         self.grafType = grafType
-#         self.data = None
+class WidgetsGraf(QWidget):
+    def __init__(self, dProgresiva, hRazante, hTerreno, parent=None):
+        super().__init__(parent)
         
-#         self.pathDataDefault = "C:/Users/mprob/Documents/Proyectos/Sistema de Estimacion de Rutas/SER/app/resources/data/examples/"
-#         # self.pathDataDefault = "../../resources/data/examples/"
-#         self.listGraf = []
-#         self.shortName = None
-#         self.tituloChart = None
-#         self.nombreCurva = None
-#         self.nombreCota = None
-#         self.defaultModel = ExcelModel()
+        self.figura = plt.figure()
+        self.terreno = plt.subplot()
+        self.razante = plt.subplot()
+        self.canvas = FigureCanvas(self.figura)
         
-#         self.selected_point = None  # Punto seleccionado
+        layout = QVBoxLayout(self)
+        layout.addWidget(self.canvas)
+
+        self.progresiva = dProgresiva
+        self.hRazante = hRazante
+        self.hTerreno = hTerreno
+        self.line, = self.terreno.plot(self.progresiva, self.hTerreno, marker='+', linestyle=':', color='g')
+        self.line, = self.razante.plot(self.progresiva, self.hRazante, marker='x', linestyle='--', color='b')
+
+        self.selected_point = None  # Punto seleccionado
+        self.offset = 0  # Offset del desplazamiento
+
+        self.lbl_previous = QLabel('Posición anterior:')
+        layout.addWidget(self.lbl_previous)
+        self.lbl_new = QLabel('Nueva posición:')
+        layout.addWidget(self.lbl_new)
         
-#         self.setup()
-    
-#     def setup(self):
-#         if self.grafType == "long":
-#             self.pathDataDefault = self.pathDataDefault + "dataLongitud.csv"
-#             self.tituloChart = 'Gráfico de Corte Longitudinal - Razante'
-#             self.nombreCurva = "Curva Perfil de Razante"
-#             self.nombreCota = "Prograsivas"
-#             self.shortName = "Longitudinal"
-#             self.default()
-#         elif self.grafType == "tran" or self.grafType == "trans":
-#             self.pathDataDefault = self.pathDataDefault + "dataTransversal.csv"
-#             self.tituloChart = 'Gráfico de Corte Transversal - por cada Nodo Razante'
-#             self.nombreCurva = "Curva Perfil de Ruta"
-#             self.nombreCota = "Cotas"
-#             self.shortName = "Transversal"
-#             self.default()
-#         else:
-#             print("error al intentar graficar el widget")
-            
-#     def default(self):
-#         if self.data is None:
-#             #usar datos de dafault
-#             try:
-#                 self.data = self.defaultModel.leerData(self.pathDataDefault)
-            
-#                 self.seriesR = QLineSeries()
-#                 self.seriesR.setName(self.nombreCurva)  # Nombre de la serie (para la leyenda)
-#                 self.seriesR.setPointsVisible(True)  # Hacer visibles los puntos de la serie
-
-#                 self.seriesN = QLineSeries()
-#                 self.seriesN.setName('Curva Terreno Natural')  # Nombre de la serie (para la leyenda)
-#                 self.seriesN.setPointsVisible(True)  # Hacer visibles los puntos de la serie
-
-#                 print(self.data)
-#                 for i in range(len(self.data)):
-#                     self.seriesR.append(self.data['cotas'][i], self.data['nodosR'][i])
-#                     self.seriesN.append(self.data['cotas'][i], self.data['nodosN'][i])
-
-#                 self.chart = QChart()
-#                 self.chart.setBackgroundBrush(QBrush(QColor("lightblue")))
-#                 self.chart.addSeries(self.seriesR)
-#                 self.chart.addSeries(self.seriesN)
-                
-#                 # Establecer los ejes manualmente
-#                 self.axis_x = QValueAxis()
-#                 self.axis_x.setTitleText(self.nombreCota)
-#                 self.axis_x.setRange(0, self.data['cotas'].max())
-#                 self.chart.addAxis(self.axis_x, Qt.AlignBottom)
-#                 self.seriesR.attachAxis(self.axis_x)
-#                 self.seriesN.attachAxis(self.axis_x)
-
-#                 self.axis_y = QValueAxis()
-#                 self.axis_y.setTitleText('Alturas')
-#                 self.axis_y.setRange(min(0, self.data['nodosR'].min(), self.data['nodosN'].min()) - 0,
-#                                 max(self.data['nodosR'].max(), self.data['nodosN'].max()) + 5)
-#                 self.chart.addAxis(self.axis_y, Qt.AlignLeft)
-#                 self.seriesR.attachAxis(self.axis_y)
-#                 self.seriesN.attachAxis(self.axis_y)
-                
-#                 self.chart.setTitle(self.tituloChart)
-
-#                 self.chart_view = QChartView(self.chart)
-#             except Exception as e:
-#                 print(f"Hubo un error: {e}")              
-        
-    
-#     def updateData(self, newData):     
-#         if newData > 0 and newData is not None:   
-#             self.seriesR = QLineSeries()
-#             self.seriesR.setName(self.nombreCurva)  # Nombre de la serie (para la leyenda)
-#             self.seriesR.setPointsVisible(True)  # Hacer visibles los puntos de la serie
-
-#             self.seriesN = QLineSeries()
-#             self.seriesN.setName('Curva Terreno Natural')  # Nombre de la serie (para la leyenda)
-#             self.seriesN.setPointsVisible(True)  # Hacer visibles los puntos de la serie
-
-#             for i in range(len(newData)):
-#                 self.seriesR.append(newData['cotas'][i], newData['nodosR'][i])
-#                 self.seriesN.append(newData['cotas'][i], newData['nodosN'][i])
-
-#             self.chart = QChart()
-#             self.chart.setBackgroundBrush(QBrush(QColor("lightblue")))
-#             self.chart.addSeries(self.seriesR)
-#             self.chart.addSeries(self.seriesN)
-#         else:
-#             print(f"No se pudo actualizar los datos del grafico {self.shortName}")
-        
-        
-#     def on_click(self, event):
-#         if event.inaxes == self.axis_x:
-#             xdata = self.seriesR.get_xdata()
-#             ydata = self.seriesR.get_ydata()
-
-#             # Verificar la distancia con los puntos
-#             for i, (x, y) in enumerate(zip(xdata, ydata)):
-#                 distance = ((x - event.xdata)**2 + (y - event.ydata)**2)**0.5
-#                 if distance < 0.1:  # Valor de tolerancia para seleccionar el punto
-#                     self.selected_point = i
-#                     # self.lbl_previous.setText(f'Posición anterior: ({x:.2f}, {y:.2f})')
-                    
-#                     print(f'Posición anterior: ({x:.2f}, {y:.2f})')
-#                     break
-
-#     def on_release(self, event):
-#         self.selected_point = None
-
-#     def on_move(self, event):
-#         if self.selected_point is not None:
-#             if event.inaxes == self.ax:
-#                 new_y = self.y.copy()
-#                 new_y[self.selected_point] = event.ydata
-#                 self.line.set_ydata(new_y)
-#                 print(f'Nueva posición: ({self.x[self.selected_point]:.2f}, {event.ydata:.2f})')
-#                 self.canvas.draw()
-
 
 class PlotWidget(QWidget):
     def __init__(self, parent=None, fig=None, canvas=None, ax=None):
