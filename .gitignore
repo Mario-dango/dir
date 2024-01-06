@@ -4,8 +4,11 @@
 # Ignorar carpeta .vscode
 .vscode
 
+# Ignorar carpeta __pycache__
+__pycache__
+
 # Ignorar todos los archivos de texto
-*.txt
+# *.txt
 
 # Ignorar archivos relacionados con claves de una API
 .env

@@ -1,26 +1,29 @@
 import pandas as pd
-import os
+import os, sys
 
-class excelModel ():
+class ExcelModel():
     
     def __init__ (self):
         self.pathToLoad = "../../resources/data/loadData/"
         self.pathToSave = "../../resources/data/saveData/"
+        self.data = None
+        self.dataGeneral = None
         
-    def leerData(nombre_archivo):
+    def leerData(self, nombre_archivo):
         datos = None
         try:
             datos = pd.read_csv(nombre_archivo)
         except:
-            print("No se pudo leer el archivo")
+            print("No se pudo leer el archivo de la ruta: %s" % nombre_archivo)
             datos = None
         else:
             if datos is not None:
                 print("Datos leidos correctamente")
         finally:
+            self.data = datos
             return datos
         
-    def guardarData (nombre_archivo, data):
+    def guardarData (self, nombre_archivo, data):
         try:
             if os.path.isfile(nombre_archivo):
                 # Si el archivo existe, cargar los datos existentes

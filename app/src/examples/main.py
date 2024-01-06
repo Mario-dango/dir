@@ -37,10 +37,10 @@ def graficar_datos(datos):
     plt.show()
 
 class ChartWidget(QWidget):
-    def __init__(self):
+    def __init__(self, path):
         super().__init__()
         
-        datos_excel = leer_datos_excel('../../resources/data/examples/dataTransversal.csv')
+        datos_excel = leer_datos_excel(path)
 
 
         seriesR = QLineSeries()
@@ -95,8 +95,8 @@ class MainWindow(QMainWindow):
         central_widget.setLayout(layout)
         self.setCentralWidget(central_widget)
         
-        chart1 = ChartWidget()
-        chart2 = ChartWidget()
+        chart2 = ChartWidget(path='../../resources/data/examples/dataLongitud.csv')
+        chart1 = ChartWidget(path='../../resources/data/examples/dataTransversal.csv')
         
         layout.addWidget(chart1.chart_view)
         layout.addWidget(chart2.chart_view)
