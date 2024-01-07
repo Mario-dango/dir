@@ -220,8 +220,8 @@ class WidgetsGraf(QWidget):
         self.progresiva = dProgresiva
         self.hRazante = hRazante
         self.hTerreno = hTerreno
-        self.line, = self.terreno.plot(self.progresiva, self.hTerreno, marker='+', linestyle=':', color='g')
-        self.line, = self.razante.plot(self.progresiva, self.hRazante, marker='x', linestyle='--', color='b')
+        self.lineTerreno, = self.terreno.plot(self.progresiva, self.hTerreno, marker='+', linestyle=':', color='g')
+        self.lineRazante, = self.razante.plot(self.progresiva, self.hRazante, marker='x', linestyle='--', color='b')
 
         self.selected_point = None  # Punto seleccionado
         self.offset = 0  # Offset del desplazamiento

@@ -32,7 +32,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>DIR1.0</string>
   </property>
   <property name="styleSheet">
    <string notr="true"/>
@@ -69,7 +69,7 @@
         <widget class="QLabel" name="titulo">
          <property name="maximumSize">
           <size>
-           <width>16777215</width>
+           <width>800</width>
            <height>40</height>
           </size>
          </property>
@@ -86,11 +86,35 @@
        </item>
        <item row="1" column="1">
         <widget class="QFrame" name="frameDer">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>150</width>
+           <height>500</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>550</width>
+           <height>2000</height>
+          </size>
+         </property>
          <property name="frameShape">
-          <enum>QFrame::StyledPanel</enum>
+          <enum>QFrame::Panel</enum>
          </property>
          <property name="frameShadow">
           <enum>QFrame::Raised</enum>
+         </property>
+         <property name="lineWidth">
+          <number>2</number>
+         </property>
+         <property name="midLineWidth">
+          <number>1</number>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout">
           <item>
@@ -239,7 +263,7 @@ QPushButton:pressed{
             </property>
             <property name="maximumSize">
              <size>
-              <width>16777215</width>
+              <width>800</width>
               <height>16777215</height>
              </size>
             </property>
@@ -264,7 +288,7 @@ QPushButton:pressed{
            <widget class="QLabel" name="dataGeneral">
             <property name="maximumSize">
              <size>
-              <width>16777215</width>
+              <width>800</width>
               <height>16777215</height>
              </size>
             </property>
@@ -289,7 +313,7 @@ Dato6: Balance total de Volumen remanente.
            <widget class="QLabel" name="dataInfo">
             <property name="maximumSize">
              <size>
-              <width>16777215</width>
+              <width>800</width>
               <height>16777215</height>
              </size>
             </property>
@@ -312,10 +336,16 @@ Versión: 0.2 rev5</string>
        <item row="1" column="0">
         <widget class="QFrame" name="frameIzq">
          <property name="frameShape">
-          <enum>QFrame::StyledPanel</enum>
+          <enum>QFrame::Panel</enum>
          </property>
          <property name="frameShadow">
           <enum>QFrame::Raised</enum>
+         </property>
+         <property name="lineWidth">
+          <number>2</number>
+         </property>
+         <property name="midLineWidth">
+          <number>1</number>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>

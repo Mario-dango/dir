@@ -18,8 +18,8 @@ class VentanaPrincipal(QMainWindow):
         # pathUi = "/SER/app/src/view/mainwindow.ui"
         # cargar la interfaz de usuario desde el archivo ui generado por Qt Designer
         self.windowUI = uic.loadUi(pathUi, self)
-        self.setWindowTitle("Sistema de viabilidad de ruta")
-        self.setMinimumSize(800,600)
+        self.setWindowTitle("DIR 1.0")
+        # self.setMinimumSize(800,600)
         # self.setMaximumSize(1920,1080)
 
     def initUI(self, widgetLong=None, widgetTrans=None): 

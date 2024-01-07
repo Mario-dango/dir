@@ -18,7 +18,8 @@ class ExcelModel():
             datos = None
         else:
             if datos is not None:
-                print("Datos leidos correctamente")
+                # print("Datos leidos correctamente")
+                pass
         finally:
             self.data = datos
             return datos

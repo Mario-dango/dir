@@ -30,8 +30,10 @@ class MainController(QObject):
         #cargar datos de prueba
         pathDefault = "C:/Users/mprob/Documents/Proyectos/Sistema de Estimacion de Rutas/SER/app/resources/data/examples/dataTest.csv"
         dataDefault = self.modelExcel.leerData(pathDefault)
+        pathDefault = "C:/Users/mprob/Documents/Proyectos/Sistema de Estimacion de Rutas/SER/app/resources/data/examples/perfilRuta.csv"
+        dataTransDefault = self.modelExcel.leerData(pathDefault)
         # print("Los datos leído son:\n %s" % dataDefault)
-        # print(dataDefault.loc[1])
+        # print(dataDefault.loc[1]) 
         # print(type(pathDefault))  # Verifica el tipo de pathDefault
             
         medias = {"tm": []}
@@ -42,12 +44,13 @@ class MainController(QObject):
 
         dataDefault['tm'] = medias["tm"]
         dataLong = dataDefault.iloc[:, [0, 1, -1]].copy()
-        dataTrans = dataDefault.iloc[:, [0, 1, -1]].copy()
-        # dataTrans = dataDefault.iloc[:,0:40].copy()
+        # dataTrans = dataDefault.iloc[:, [0, 1, -1]].copy()
+        dataTrans = dataDefault.iloc[:,0:-1].copy()
         # print(medias)
         # print(dataLong['tm'])
         self.longitudinalController.data = dataLong
         self.longitudinalController.setup()
+        self.transversalController.dataPerfil = dataTransDefault
         self.transversalController.data = dataTrans
         self.transversalController.setup()
         
@@ -111,11 +114,15 @@ Versión: v0.2.4""")
         # self.ventanaPrincipal.updateTransInfo(self.longiasdasdasdasdasd.data)
         pass
     
-    def updateTransInfo(self):
-        ##llamar al controlador transversal
-        # self.transversalController.updateData(self.nodoId)
-        # self.ventanaPrincipal.updateTransInfo(self.transversalController.data)
-        pass
+    def updateTransInfo(self, dataSelect=None):
+        if dataSelect is not None:
+            #cambiar datos en grafico transversal
+            pass
+        else: 
+            ##llamar al controlador transversal
+            # self.transversalController.updateData(self.nodoId)
+            # self.ventanaPrincipal.updateTransInfo(self.transversalController.data)
+            pass
     
     def setInfo(self, data):
         self.ventanaPrincipal.updateInfo(data)
@@ -137,14 +144,14 @@ Versión: v0.2.4""")
             progresiva = self.longitudinalController.longitudinalView.progresiva[self.longitudinalController.longitudinalView.selected_point]
             alturaTerreno = self.longitudinalController.longitudinalView.hTerreno[self.longitudinalController.longitudinalView.progresiva[self.longitudinalController.longitudinalView.selected_point]]
             diferencia = alturaRazante - alturaTerreno
+            self.transversalController.acutalizarGrafico(progresiva)
             dataText = (
             f"[Progresiva Número: {progresiva}\n"
             f"[Cota Número: {progresiva}]\n"
             f"[Altura de Ruta: {alturaRazante:.2f}m]\n"
             f"[Altura de Terreno Natural: {alturaTerreno:.2f}m]\n"
             f"[Diferencia: {diferencia:.2f}m] ")
-            
-
+            self.updateTransInfo(progresiva)
             self.ventanaPrincipal.updateTransInfo(dataText)
         else:
             pass
@@ -158,6 +165,8 @@ Versión: v0.2.4""")
             progresiva = self.longitudinalController.longitudinalView.progresiva[self.longitudinalController.longitudinalView.selected_point]
             alturaTerreno = self.longitudinalController.longitudinalView.hTerreno[self.longitudinalController.longitudinalView.progresiva[self.longitudinalController.longitudinalView.selected_point]]
             diferencia = alturaRazante - alturaTerreno
+            self.transversalController.data.iat[progresiva, 1] = self.longitudinalController.longitudinalView.hRazante[self.longitudinalController.longitudinalView.progresiva[self.longitudinalController.longitudinalView.selected_point]]
+            self.transversalController.acutalizarGrafico(progresiva)
             dataText = (
             f"[Progresiva Número: {progresiva}\n"
             f"[Cota Número: {progresiva}]\n"
