@@ -21,18 +21,22 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>0</width>
-    <height>0</height>
+    <width>1058</width>
+    <height>686</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>16777214</width>
-    <height>16777215</height>
+    <width>30000</width>
+    <height>30000</height>
    </size>
   </property>
   <property name="windowTitle">
    <string>DIR1.0</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../../../../../../../Downloads/icono1.jpg</normaloff>../../../../../../../Downloads/icono1.jpg</iconset>
   </property>
   <property name="styleSheet">
    <string notr="true"/>
@@ -65,26 +69,79 @@
        <enum>QFrame::Raised</enum>
       </property>
       <layout class="QGridLayout" name="gridLayout">
-       <item row="0" column="0" colspan="2">
-        <widget class="QLabel" name="titulo">
-         <property name="maximumSize">
-          <size>
-           <width>800</width>
-           <height>40</height>
-          </size>
+       <item row="4" column="0">
+        <widget class="QFrame" name="frameIzq">
+         <property name="frameShape">
+          <enum>QFrame::Panel</enum>
          </property>
-         <property name="font">
-          <font>
-           <pointsize>20</pointsize>
-           <bold>true</bold>
-          </font>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
          </property>
-         <property name="text">
-          <string>Diseño Interactivo de Razante</string>
+         <property name="lineWidth">
+          <number>2</number>
          </property>
+         <property name="midLineWidth">
+          <number>1</number>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <item>
+           <widget class="QLabel" name="titGrafLong">
+            <property name="minimumSize">
+             <size>
+              <width>500</width>
+              <height>35</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>500</width>
+              <height>40</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>14</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Gráfico de corte Longitudinal</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="titGrafTrans">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>400</width>
+              <height>35</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>5000</width>
+              <height>40</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>14</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Grafico de corte Transversal por cada cota</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
-       <item row="1" column="1">
+       <item row="4" column="1">
         <widget class="QFrame" name="frameDer">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -117,25 +174,34 @@
           <number>1</number>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetDefaultConstraint</enum>
+          </property>
           <item>
-           <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,0,10">
-            <property name="spacing">
-             <number>20</number>
-            </property>
+           <layout class="QFormLayout" name="formLayout">
             <property name="sizeConstraint">
              <enum>QLayout::SetDefaultConstraint</enum>
             </property>
-            <property name="leftMargin">
+            <property name="fieldGrowthPolicy">
+             <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+            </property>
+            <property name="rowWrapPolicy">
+             <enum>QFormLayout::WrapLongRows</enum>
+            </property>
+            <property name="labelAlignment">
+             <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+            </property>
+            <property name="horizontalSpacing">
              <number>20</number>
             </property>
-            <property name="rightMargin">
-             <number>20</number>
+            <property name="verticalSpacing">
+             <number>10</number>
             </property>
-            <item>
+            <item row="0" column="0">
              <widget class="QPushButton" name="btnUpload">
               <property name="minimumSize">
                <size>
-                <width>100</width>
+                <width>200</width>
                 <height>30</height>
                </size>
               </property>
@@ -177,7 +243,7 @@ QPushButton:pressed{
               </property>
              </widget>
             </item>
-            <item>
+            <item row="0" column="1">
              <widget class="QPushButton" name="btnSave">
               <property name="minimumSize">
                <size>
@@ -214,8 +280,45 @@ QPushButton:pressed{
               </property>
              </widget>
             </item>
-            <item>
+            <item row="1" column="0">
              <widget class="QPushButton" name="btnConfig">
+              <property name="minimumSize">
+               <size>
+                <width>200</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>200</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>11</pointsize>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QPushButton{
+	border-radius: 15px;
+	background: rgb(0,85,255);
+	color: white;
+}
+QPushButton:hover{
+	background: rgb(52, 116, 255);
+}
+QPushButton:pressed{
+	background: rgb(70, 184, 255);
+}</string>
+              </property>
+              <property name="text">
+               <string>Obras de Arte</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QPushButton" name="btnEstructural">
               <property name="minimumSize">
                <size>
                 <width>100</width>
@@ -247,7 +350,16 @@ QPushButton:pressed{
 }</string>
               </property>
               <property name="text">
-               <string>Config. Obra Arte</string>
+               <string>Paquete Estructural</string>
+              </property>
+              <property name="icon">
+               <iconset theme="accessories-calculator"/>
+              </property>
+              <property name="default">
+               <bool>true</bool>
+              </property>
+              <property name="flat">
+               <bool>false</bool>
               </property>
              </widget>
             </item>
@@ -275,6 +387,12 @@ QPushButton:pressed{
             <property name="styleSheet">
              <string notr="true"/>
             </property>
+            <property name="frameShape">
+             <enum>QFrame::WinPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
             <property name="text">
              <string>[Progresiva Número: 0]
 [Cota Número: 0]
@@ -296,6 +414,12 @@ QPushButton:pressed{
              <font>
               <pointsize>11</pointsize>
              </font>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::WinPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
             </property>
             <property name="text">
              <string>Dato1: Área de tierra retirada por cada corte seleccionado
@@ -322,6 +446,12 @@ Dato6: Balance total de Volumen remanente.
               <pointsize>11</pointsize>
              </font>
             </property>
+            <property name="frameShape">
+             <enum>QFrame::WinPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
             <property name="text">
              <string>[Repositorio de GitHub: ]
 [Autores:  ]
@@ -333,76 +463,23 @@ Versión: 0.2 rev5</string>
          </layout>
         </widget>
        </item>
-       <item row="1" column="0">
-        <widget class="QFrame" name="frameIzq">
-         <property name="frameShape">
-          <enum>QFrame::Panel</enum>
+       <item row="3" column="0">
+        <widget class="QLabel" name="titulo">
+         <property name="maximumSize">
+          <size>
+           <width>800</width>
+           <height>40</height>
+          </size>
          </property>
-         <property name="frameShadow">
-          <enum>QFrame::Raised</enum>
+         <property name="font">
+          <font>
+           <pointsize>20</pointsize>
+           <bold>true</bold>
+          </font>
          </property>
-         <property name="lineWidth">
-          <number>2</number>
+         <property name="text">
+          <string>Diseño Interactivo de Razante</string>
          </property>
-         <property name="midLineWidth">
-          <number>1</number>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout_2">
-          <item>
-           <widget class="QLabel" name="titGrafLong">
-            <property name="minimumSize">
-             <size>
-              <width>500</width>
-              <height>25</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>500</width>
-              <height>40</height>
-             </size>
-            </property>
-            <property name="font">
-             <font>
-              <pointsize>14</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>Gráfico de corte Longitudinal</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="titGrafTrans">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>400</width>
-              <height>25</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>5000</width>
-              <height>40</height>
-             </size>
-            </property>
-            <property name="font">
-             <font>
-              <pointsize>14</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>Grafico de corte Transversal por cada cota</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
         </widget>
        </item>
       </layout>

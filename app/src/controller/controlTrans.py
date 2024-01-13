@@ -1,51 +1,45 @@
+# -*- coding: utf-8 -*-
+##### LIBRERIAS Y DEPENDENCIAS NECESARIAS PARA LA CLASE #####
 from app.src.model.archivosExcel import ExcelModel
 from app.src.view.widgets import WidgetsGraf
 import pandas as pd
 import numpy as np
+################################################################
+
+## CLASE DEFINIDA DEL CONTROLADOR TRANSVERSAL ##
 class ControlTransversal():
     
-    def __init__(self, model):
-        self.transversalModel = model
-        self.transversalView = None
-        self.data = pd.DataFrame()
-        self.valorActualRazante = None
-        self.dataPerfil = pd.DataFrame()
-        
+    ## MÉTODO CONSTRUCTOR DE LA CLASE TRANSVERSAL
+    def __init__(self):
+        self.transversalView = None         ## Widget del grafico para el perfil transeversal
+        self.dataPerfilesLista = []         ## Lista con los dataFrame de los perfiles transversales
+        self.valorActualRazante = None      ## Valor actual de la razante para un perfil transversal dado
+        self.dataPerfil = pd.DataFrame()    ## DataFrame del perfil transvers actual
+        ## Datos de default para los calculos del perfil
+        self.dataCalculo = {
+            "Ancho Trocha": 3.65,           ## [m]
+            "Ancho Banquina": 1.2,          ## [m]
+            "Distancia al plano": 10,       ## [m]
+            "Pendiente Transversal": 2,     ## [%]
+            "Pendiente Banquina": 2.5,      ## [%]
+            "Pendiente Talud": 1,           ## [(lateral)en(lateral)]
+            "Paquete Estructural": 0.7      ## [m]
+        }        
 
+    ## MÉTODO PARA LA CONFIGURACIÓN DE LA CLASE
     def setup(self):
-        dataTerreno = {"nodoT": []}
-        valorDeRazanteData = self.data.iat[0,1]
-        self.valorActualRazante = self.dataPerfil.iat[20,1]
-        diferenciaDeAlturas = float(valorDeRazanteData) - float(self.valorActualRazante)
-        # # print(f"altura razante: {valorDeRazanteData}\naltura perfil: {valorActualRazante}\ndiferencia: {diferenciaDeAlturas}")
-        # Convertir la columna a valores flotantes usando pd.to_numeric
-        # self.dataPerfil['nodosR'] = pd.to_numeric(self.dataPerfil['nodosR'], errors='coerce')
-        # print(self.dataPerfil)
-        # For para acomodar el perfil de ruta
-        for i in range(len(self.dataPerfil)):
-            self.dataPerfil.iat[i, 1] = float(self.dataPerfil.iat[i, 1]) + diferenciaDeAlturas
-        self.valorActualRazante = self.dataPerfil.iat[20,1]
-        # For para acomodar las columans a fila y agregarlas ald ataframe self.dataPerfil
-        for j in range(len(self.data.columns[2:])):
-            columna_actual = self.data.iloc[0, j+2]  # Obtener la columna actual por su índice numérico
-            dataTerreno["nodoT"].append(columna_actual)  # Agregar los valores al final de la lista
-        # print(f"longitud de columnas: {len(self.data.columns[2:])}")
-        # print(f"longitud de array dataTerreno: {len(dataTerreno['nodoT'])}")
-        # print(f"longitud de array dataTerreno: {len(self.dataPerfil['cotas'])}")
-        dataColum = np.array(dataTerreno["nodoT"]).reshape(-1, 1)  # Transformar en vector columna
-        self.dataPerfil['nodosT'] = dataColum
         
-        # Convierto los dataframe en lsitas para los gráficos
-        dataTerreno = self.dataPerfil["nodosT"].tolist()
-        dataCotaProgesiva = self.dataPerfil['cotas'].tolist()
-        dataRuta = self.dataPerfil["nodosR"].tolist()
-        # dataCotaProgesiva = self.data['progresiva'].tolist()
-        # dataRazante = self.data["razante"].tolist()
-        # dataTerrenoMedio = self.data["tm"].tolist()
-        self.transversalView = WidgetsGraf(dataCotaProgesiva, dataRuta, dataTerreno)
+        dataCotaProgesiva = self.dataPerfilesLista[0]['DISTANCIA (PROGRESIVA)'].tolist()
+        # dataRuta = self.dataPerfilesLista[0]['DISTANCIA (PROGRESIVA)'].tolist()
+        dataTerreno = self.dataPerfilesLista[0]['COTA'].tolist()
+        ## Para generar el grafico necesito enviarle los datos en forma de Listas
+        self.transversalView = WidgetsGraf(dataCotaProgesiva, None, dataTerreno)
         self.cid_press = self.transversalView.canvas.mpl_connect('button_press_event', self.on_click)
         self.cid_release = self.transversalView.canvas.mpl_connect('button_release_event', self.on_release)
         self.cid_move = self.transversalView.canvas.mpl_connect('motion_notify_event', self.on_move)
+
+    def generacionPerfil(self):
+        pass
 
     def on_click(self, event):
         # print("estoy en On_click")
@@ -60,6 +54,7 @@ class ControlTransversal():
                     self.transversalView.selected_point = i
                     self.transversalView.lbl_previous.setText(f'Posición anterior: ({x:.2f}, {y:.2f})')
                     break
+                
     def acutalizarGrafico(self, progresiva):
         dataTerreno = {"nodoT": []}
         # For para acomodar las columans a fila y agregarlas ald ataframe self.dataPerfil

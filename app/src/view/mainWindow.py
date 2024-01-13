@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
-# # from controllers import main_controller
+##### LIBRERIAS Y DEPENDENCIAS NECESARIAS PARA LA CLASE #####
 from PyQt5 import QtWidgets
 from PyQt5.QtGui import QShowEvent
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5 import uic
+################################################################
 
-
-# from app.src.view.widgets import ChartWidget
+## CLASE DEFINIDA DE LA VENTANA PRINCIPAL ##
 class VentanaPrincipal(QMainWindow):
     def __init__(self, parent= None):
         super().__init__(parent)
@@ -19,9 +19,17 @@ class VentanaPrincipal(QMainWindow):
         # cargar la interfaz de usuario desde el archivo ui generado por Qt Designer
         self.windowUI = uic.loadUi(pathUi, self)
         self.setWindowTitle("DIR 1.0")
+        
         # self.setMinimumSize(800,600)
         # self.setMaximumSize(1920,1080)
+        self.setGeometry(800, 600, 1920, 1080)
+        
+        # Configura las banderas de la ventana
+        flags = self.windowFlags()
+        flags |= Qt.WindowMaximizeButtonHint  # Agrega la bandera de maximizar
+        self.setWindowFlags(flags)
 
+    ## MÉTODO PARA LA INICIALIZACION DE LA CLASE
     def initUI(self, widgetLong=None, widgetTrans=None): 
         
         if (widgetLong != None) and (widgetTrans != None):# Obtener el layout del QFrame si es un contenedor de layout
@@ -53,6 +61,7 @@ class VentanaPrincipal(QMainWindow):
     def updateInfo(self, data):
         self.windowUI.dataInfo.setText(data)
         
+## CLASE DEFINIDA DE LA VENTANA OBRAS DE ARTE ##
 class VentanaArte(QMainWindow):
     def __init__(self):
         super().__init__()

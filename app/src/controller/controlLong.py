@@ -1,23 +1,29 @@
+# -*- coding: utf-8 -*-
+##### LIBRERIAS Y DEPENDENCIAS NECESARIAS PARA LA CLASE #####
 from app.src.model.archivosExcel import ExcelModel
 from app.src.view.widgets import WidgetsGraf
-
 import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+################################################################
 
+## CLASE DEFINIDA DEL CONTROLADOR LONGITUDINAL ##
 class ControlLongitudinal():
     
-    def __init__(self, model):
-        self.longitudinalModel = model
-        self.longitudinalView = None
-        self.data = pd.DataFrame()
+    ## MÉTODO CONSTRUCTOR DE LA CLASE LONGITUDINAL
+    def __init__(self):
+        self.longitudinalView = None        ##
+        self.data = pd.DataFrame()          ##
         
+    ## MÉTODO PARA LA CONFIGURACIÓN DE LA CLASE
     def setup(self):
         # print(f"Los datos son: \n{self.data}")
         if self.data is not None:
-            dataProgesiva = self.data['progresiva'].tolist()
-            dataRazante = self.data["razante"].tolist()
-            dataTerrenoMedio = self.data["tm"].tolist()
+            ## Extraigo del DataFrame las listas corrrespondientes para graficar 
+            print(self.data)
+            dataProgesiva = self.data['Progresivas'].tolist()
+            dataRazante = self.data["Cota de Proyecto"].tolist()
+            dataTerrenoMedio = self.data["Cota de Terreno"].tolist()
             self.longitudinalView = WidgetsGraf(dataProgesiva, dataRazante, dataTerrenoMedio)
             self.cid_press = self.longitudinalView.canvas.mpl_connect('button_press_event', self.on_click)
             self.cid_release = self.longitudinalView.canvas.mpl_connect('button_release_event', self.on_release)

@@ -8,7 +8,7 @@ import sys
 
 app = QApplication([])
 
-pathUi = "C:/Users/mprob/Documents/Proyectos/Sistema de Estimacion de Rutas/SER/app/resources/ui/login.ui"
+pathUi = "C:/Users/mprob/Documents/Proyectos/Sistema de Estimacion de Rutas/SER/app/resources/ui/configLoad.ui"
 # pathUi = "/SER/app/src/view/mainwindow.ui"
 # cargar la interfaz de usuario desde el archivo ui generado por Qt Designer
 windowUI = uic.loadUi(pathUi)
