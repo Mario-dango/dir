@@ -28,17 +28,29 @@ class ControlTransversal():
 
     ## MÉTODO PARA LA CONFIGURACIÓN DE LA CLASE
     def setup(self):
-        
+        self.generacionPerfil()
         dataCotaProgesiva = self.dataPerfilesLista[0]['DISTANCIA (PROGRESIVA)'].tolist()
         # dataRuta = self.dataPerfilesLista[0]['DISTANCIA (PROGRESIVA)'].tolist()
         dataTerreno = self.dataPerfilesLista[0]['COTA'].tolist()
+        # print(f"data de cota progresiva:\n {dataCotaProgesiva}\n data de cota Terreno:\n {dataTerreno}\n")
+        # print(len(self.dataPerfilesLista))
         ## Para generar el grafico necesito enviarle los datos en forma de Listas
         self.transversalView = WidgetsGraf(dataCotaProgesiva, None, dataTerreno)
         self.cid_press = self.transversalView.canvas.mpl_connect('button_press_event', self.on_click)
         self.cid_release = self.transversalView.canvas.mpl_connect('button_release_event', self.on_release)
         self.cid_move = self.transversalView.canvas.mpl_connect('motion_notify_event', self.on_move)
 
-    def generacionPerfil(self):
+    ## MÉTODO PARA LA GENERACIÓN DEL PERFIL TRANSVERSAL
+    def generacionPerfil(self):            
+        for perfiles in range(len(self.dataPerfilesLista)):
+            # Iterar sobre las filas del DataFrame        
+            for index, row in self.dataPerfilesLista[perfiles].iterrows():
+                for col in self.dataPerfilesLista[perfiles].columns:
+                    # Verificar si el valor es NaN
+                    if pd.isna(row[col]):
+                        # Reemplazar NaN con el valor anterior
+                        self.dataPerfilesLista[perfiles].at[index, col] = self.dataPerfilesLista[perfiles].at[index-1, col]
+        
         pass
 
     def on_click(self, event):
@@ -55,26 +67,15 @@ class ControlTransversal():
                     self.transversalView.lbl_previous.setText(f'Posición anterior: ({x:.2f}, {y:.2f})')
                     break
                 
-    def acutalizarGrafico(self, progresiva):
-        dataTerreno = {"nodoT": []}
-        # For para acomodar las columans a fila y agregarlas ald ataframe self.dataPerfil
-        for j in range(len(self.data.columns[2:])):
-            columna_actual = self.data.iloc[progresiva, j+2]  # Obtener la columna actual por su índice numérico
-            dataTerreno["nodoT"].append(columna_actual)  # Agregar los valores al final de la lista
-        # print(f"longitud de columnas: {len(self.data.columns[2:])}")
-        # print(f"longitud de array dataTerreno: {len(dataTerreno['nodoT'])}")
-        # print(f"longitud de array dataTerreno: {len(self.dataPerfil['cotas'])}")
-        dataColum = np.array(dataTerreno["nodoT"]).reshape(-1, 1)  # Transformar en vector columna
-        self.dataPerfil['nodosT'] = dataColum        
-        # Convierto los dataframe en lsitas para los gráficos
-        dataTerreno = self.dataPerfil["nodosT"].tolist()   
-        # Establece los nuevos datos de altura en la línea del gráfico de la vista transversal
-        self.transversalView.lineTerreno.set_ydata(dataTerreno)
-        # Actualiza el texto en la etiqueta lbl_new con la nueva posición del punto
-        # self.transversalView.lbl_new.setText(f'Nueva posición: ({self.transversalView.progresiva[self.transversalView.selected_point]:.2f}, {event.ydata:.2f})')
-        # Vuelve a dibujar la vista transversal para mostrar los cambios
-        # self.transversalView.canvas.draw()
-        self.actualizarPerfil(progresiva)
+    def acutalizarGrafico(self, numeroProgreLong):
+        print(f"data lista: {self.dataPerfilesLista}\n {type(numeroProgreLong)}\n")
+        print(f"valor de progre: {numeroProgreLong}\nY dataPerfilesLista[progresiva]: {self.dataPerfilesLista[int(numeroProgreLong)]}")
+        
+        dataTerreno = self.dataPerfilesLista[numeroProgreLong]['COTA'].tolist()
+        self.transversalView.hTerreno = dataTerreno
+        self.transversalView.update_grafico()
+                
+        # self.actualizarPerfil(numeroProgreLong)
 
     def actualizarPerfil(self, prograsiva ):
         print("estoy en actualizar perfil")

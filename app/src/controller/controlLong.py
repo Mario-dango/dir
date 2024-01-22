@@ -20,7 +20,7 @@ class ControlLongitudinal():
         # print(f"Los datos son: \n{self.data}")
         if self.data is not None:
             ## Extraigo del DataFrame las listas corrrespondientes para graficar 
-            print(self.data)
+            # print(f"valor de self.data: {self.data}")
             dataProgesiva = self.data['Progresivas'].tolist()
             dataRazante = self.data["Cota de Proyecto"].tolist()
             dataTerrenoMedio = self.data["Cota de Terreno"].tolist()
@@ -38,7 +38,7 @@ class ControlLongitudinal():
             # Verificar la distancia con los puntos
             for i, (x, y) in enumerate(zip(xdata, ydata)):
                 # Calcula la distancia euclidiana entre el punto clickeado y los puntos del gráfico
-                distance = ((x - event.xdata)**2 + (y - event.ydata)**2)**0.5
+                distance = ((x - event.xdata)**2 + (y - event.ydata)**2)**1.5
                 # Si la distancia es menor que 0.5 (valor de tolerancia para seleccionar el punto), se selecciona el punto
                 if distance < 0.5:
                     # Establece el punto seleccionado en la vista longitudinal
@@ -57,15 +57,20 @@ class ControlLongitudinal():
         # print("estoy en on_move")
         if self.longitudinalView.selected_point is not None:
             if event.inaxes == self.longitudinalView.razante:
+                print(f"\n\n\ntengo el valor de progresiv:  {self.longitudinalView.progresiva[self.longitudinalView.selected_point]}\n\n\nY el selectPoint es de: {self.longitudinalView.selected_point}\n\n\n")
                 new_y = self.longitudinalView.hRazante.copy()
                 new_y[self.longitudinalView.selected_point] = event.ydata
                 self.longitudinalView.lineRazante.set_ydata(new_y)
                 self.longitudinalView.lbl_new.setText(f'Valor de Progresiva: {self.longitudinalView.progresiva[self.longitudinalView.selected_point]}| Altura de razante nueva: {event.ydata:.2f}')
-                self.longitudinalView.hRazante[self.longitudinalView.progresiva[self.longitudinalView.selected_point]] = event.ydata
+                self.longitudinalView.hRazante[self.longitudinalView.selected_point] = event.ydata
                 self.longitudinalView.canvas.draw()
+                self.updateData()
     
+    ##  MÉTODO ENCARGADO EN RECALCULAR 
     def updateData(self):
-        
+        for i in range(len(self.data.columns)):
+            if i != 0:
+                self.data.iloc["Diferencia de Cotas", self.data.columns[i]] = abs(self.data.iloc["Cota de Terreno", self.data.columns[i]] - self.data.iloc["Cota de Proyecto", self.data.columns[i]] )
         pass
     
                 

@@ -166,14 +166,15 @@ Versión: v0.2.4""")
     def on_click_long(self, event):
         if self.longitudinalController.longitudinalView.selected_point is not None:
             ## Extracción de datos para mostrarlos en el lateral derecho
-            print(self.longitudinalController.longitudinalView.selected_point)
+            print(f"Punto seleccionado: {self.longitudinalController.longitudinalView.selected_point}")
             alturaRazante = self.longitudinalController.longitudinalView.hRazante[self.longitudinalController.longitudinalView.selected_point]
             progresiva = self.longitudinalController.longitudinalView.progresiva[self.longitudinalController.longitudinalView.selected_point]
             alturaTerreno = self.longitudinalController.longitudinalView.hTerreno[self.longitudinalController.longitudinalView.selected_point]
             diferencia = alturaRazante - alturaTerreno
-            pendiente = self.longitudinalController.data["Pendiente", self.longitudinalController.longitudinalView.selected_point]
+            # pendiente = self.longitudinalController.data.loc["Pendiente", self.longitudinalController.data.columns[self.longitudinalController.longitudinalView.selected_point]]
+            pendiente ="NONE"
             ## Actualizo grafico de perfil Transversal
-            self.transversalController.acutalizarGrafico(progresiva)
+            self.transversalController.acutalizarGrafico(int(self.longitudinalController.longitudinalView.selected_point))
             ## Formateo los Datos para ser mostrados en el grafico Longitudinal
             dataText = (
             f"[Progresiva: {progresiva}m]\n"
@@ -181,7 +182,6 @@ Versión: v0.2.4""")
             f"[Cota de Proyecto: {alturaRazante:.4f}m]\n"
             f"[Diferencia entre Cotas: {diferencia:.4f}m]\n"
             f"[Pendiente: {pendiente}m] ")
-            self.updateTransInfo(progresiva)
             ## Actualizo Datos mostrados acerca del grafico Longitudinal
             self.ventanaPrincipal.updateTransInfo(dataText)
         else:
@@ -199,10 +199,11 @@ Versión: v0.2.4""")
             progresiva = self.longitudinalController.longitudinalView.progresiva[self.longitudinalController.longitudinalView.selected_point]
             alturaTerreno = self.longitudinalController.longitudinalView.hTerreno[self.longitudinalController.longitudinalView.selected_point]
             diferencia = alturaRazante - alturaTerreno
-            pendiente = self.longitudinalController.data["Pendiente", self.longitudinalController.longitudinalView.selected_point]
+            # pendiente = self.longitudinalController.data.loc["Pendiente", self.longitudinalController.data.columns[self.longitudinalController.longitudinalView.selected_point]]
+            pendiente ="NONE"
             ## Actualizo grafico de perfil Transversal
-            self.transversalController.data.iat[progresiva, 1] = self.longitudinalController.longitudinalView.hRazante[self.longitudinalController.longitudinalView.progresiva[self.longitudinalController.longitudinalView.selected_point]]
-            self.transversalController.acutalizarGrafico(progresiva)
+            # self.transversalController.data.iat[progresiva, 1] = self.longitudinalController.longitudinalView.hRazante[self.longitudinalController.longitudinalView.selected_point]
+            self.transversalController.acutalizarGrafico(int(self.longitudinalController.longitudinalView.selected_point))
             ## Formateo los Datos para ser mostrados en el grafico Longitudinal
             dataText = (
             f"[Progresiva: {progresiva}m]\n"

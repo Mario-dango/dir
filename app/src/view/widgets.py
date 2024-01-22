@@ -80,6 +80,18 @@ class WidgetsGraf(QWidget):
         self.lbl_new = QLabel('Nueva posición:')
         layout.addWidget(self.lbl_new)
         
+    def update_grafico(self):
+        # Actualizar los datos en el gráfico
+        self.lineTerreno.set_data(self.progresiva, self.hTerreno)
+        self.lineRazante.set_data(self.progresiva, self.hRazante)
+
+        # Ajustar la vista al nuevo rango de datos
+        self.terreno.relim()
+        self.terreno.autoscale_view()
+
+        # Redibujar el lienzo
+        self.canvas.draw()
+        
 ## CLASE DEFINIDA DEL DIALOG GESTOR DE DATOS PERFIL TRANSVERSAL ##
 class VentanaEmergenteExcel(QDialog):
     def __init__(self, parent= None):

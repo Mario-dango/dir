@@ -22,7 +22,8 @@ class VentanaPrincipal(QMainWindow):
         
         # self.setMinimumSize(800,600)
         # self.setMaximumSize(1920,1080)
-        self.setGeometry(800, 600, 1920, 1080)
+        # self.setGeometry(800, 600, 1920, 1080)
+        self.setGeometry(800, 600, 1000, 800)
         
         # Configura las banderas de la ventana
         flags = self.windowFlags()

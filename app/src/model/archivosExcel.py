@@ -105,7 +105,7 @@ class PlanillaModel():
                 for clave, valor in dataLong.items():
                     if isinstance(valor, (list, str)):  # Verifica si el valor es una lista o una cadena
                         longitud_elemento = len(valor)
-                        print(f"Longitud del elemento en la clave '{clave}': {longitud_elemento}")
+                        # print(f"Longitud del elemento en la clave '{clave}': {longitud_elemento}")
                 ## Muestro las longitudes de los valores del diccionario dataLong
                 long = 0
                 for clave, valor in dataLong.items():
@@ -120,7 +120,7 @@ class PlanillaModel():
                 for clave, valor in dataLong.items():
                     if isinstance(valor, (list, str)):  # Verifica si el valor es una lista o una cadena
                         longitud_elemento = len(valor)
-                        print(f"Longitud del elemento en la clave '{clave}': {longitud_elemento}")
+                        # print(f"Longitud del elemento en la clave '{clave}': {longitud_elemento}")
                 ## Muestro las longitudes de los valores del diccionario dataLong
                 ## Seteo el atributo dataLongitudinal con la nueva estructura de DataFrame desde el diccionario formateado
                 self.dataLongitudinal = pd.DataFrame(dataLong)
